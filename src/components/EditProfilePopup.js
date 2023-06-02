@@ -47,7 +47,7 @@ function EditProfilePopup(props) {
             onSubmit={handleSubmit}>
             <input
                 type="text"
-                id="firstname"
+                id="email"
                 required
                 minLength="2" maxLength="40"
                 name="name"
@@ -58,9 +58,9 @@ function EditProfilePopup(props) {
             <span className="firstname-error edit-form__personalia-error" />
             <input
                 type="text"
-                id="profession"
+                id="password"
                 required
-                minLength="2" maxLength="200"
+                minLength="5" maxLength="20"
                 name="about"
                 placeholder="О себе"
                 className="edit-form__personalia"

@@ -1,13 +1,18 @@
 import React from 'react';
+import Authorization from './Authorization'
 
 function Register(props) {
-    const {  } = props;
+    const { } = props;
 
     return (
-        <div className='register'>
-            <h2 className="register__title">Регистрация</h2>
-            <img src="https://avatars.mds.yandex.net/i?id=889e21d87f9cb64267cd8703c2f13387-7009603-images-thumbs&ref=rim&n=33&w=220&h=165" alt="тест"/>
-        </div>
+        <Authorization
+            title="Регистрация"
+            name="register"
+            button="Зарегистрироваться">
+            <p className="authorization__question">Уже зарегистрированы?
+                <a href="/sign-in" name="Войти" className="authorization__question_link"> Войти</a>
+            </p>
+        </Authorization>
     )
 }
 export default Register;

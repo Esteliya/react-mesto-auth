@@ -168,25 +168,10 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header />
-        {/* <Routes>
-            <Route path='/' elemeht={
-              <Main
-              onEditProfile={handleEditProfileClick}
-              onAddPlace={handleAddPlaceClick}
-              onEditAvatar={handleEditAvatarClick}
-              onCardClick={handleCardClick}
-              currentUser={currentUser}
-              cards={cards}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
-            />
-            } />
-            <Route path='/sign-up' elemeht={<Register />} />
-            <Route path='/sign-in' elemeht={<Login />} />
-        </Routes> 
-        <Register/>*/}
-
+        <Header 
+        name="Войти"
+        link="/sign-in"
+        />
         <Routes>
           <Route path='/' element={
             <Main

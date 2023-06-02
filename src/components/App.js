@@ -12,6 +12,7 @@ import CurrentUserContext from '../contexts/CurrentUserContext';
 import api from '../utils/Api';
 import Register from './Register';
 import Login from './Login';
+import PopupRegisterInfo from './PopupRegisterInfo'
 
 function App() {
   //контекст текущего пользователя
@@ -157,11 +158,19 @@ function App() {
     //console.log(`удалили карточку ${card._id}`);
   }
 
+  //редактировать аватар профиля
+/*   const [ischeckRegister, setIscheckRegister] = React.useState(false);
+
+  function handleRegister() {
+    setIscheckRegister(true);
+  };
+ */
   //закрываем попапы по крестику
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
+    //setIscheckRegister(false);
     setSelectedCard({});
   }
 
@@ -171,6 +180,7 @@ function App() {
         <Header 
         name="Войти"
         link="/sign-in"
+        email="test@gmail.com"
         />
         <Routes>
           <Route path='/' element={
@@ -189,6 +199,10 @@ function App() {
         </Routes>
 
         <Footer />
+        <PopupRegisterInfo
+        /* isOpen={ischeckRegister}
+        onClose={closeAllPopups}  */
+        />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}

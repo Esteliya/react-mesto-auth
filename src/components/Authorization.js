@@ -1,6 +1,3 @@
-import React from 'react';
-import { Children } from 'react';
-
 function Authorization(props) {
     const { title, name, button, children } = props;
 

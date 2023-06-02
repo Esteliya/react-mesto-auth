@@ -2,9 +2,7 @@
     display: inline-block;
     width: auto;
     margin: 0;
-    color: #FFFFFF;
-    text-decoration: none;
-    font-weight: 400;
+    font-weight: 500;
 }
 .header__link:hover {
     opacity: 0.6;

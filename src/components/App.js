@@ -1,5 +1,5 @@
 import React from 'react';
-//import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import Main from './Main';
@@ -10,6 +10,8 @@ import AddPlacePopup from './AddPlacePopup';
 import ImagePopup from './ImagePopup';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import api from '../utils/Api';
+import Register from './Register';
+import Login from './Login';
 
 function App() {
   //контекст текущего пользователя
@@ -184,8 +186,10 @@ function App() {
             <Route path='/sign-in' elemeht={<Login />} />
         </Routes> 
         <Register/>*/}
-      
-        <Main
+
+        <Routes>
+          <Route path='/' element={
+            <Main
               onEditProfile={handleEditProfileClick}
               onAddPlace={handleAddPlaceClick}
               onEditAvatar={handleEditAvatarClick}
@@ -193,7 +197,11 @@ function App() {
               cards={cards}
               onCardLike={handleCardLike}
               onCardDelete={handleCardDelete}
-            />
+            />} />
+          <Route path='/sign-up' element={<Register />} />
+          <Route path='/sign-in' element={<Login />} />
+
+        </Routes>
 
         <Footer />
         <EditProfilePopup

@@ -22,11 +22,11 @@ function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
 
   //контекст данных пользователя 
-  const [userData, setUserData] = React.useState({ email: '', password: '' });
+  const [userInfo, setUserInfo] = React.useState({ email: '', password: '' });
 
-  const handleLogin = ({ email, password }) => {
+  const handleLogin = () => {
     setLoggedIn(true);
-    setUserData({ email, password });
+    //setUserInfo({ email, password });
   }
 //контекст попапа оповещения хода регистрации
 const [showInfoToolTip, setShowInfoToolTip] = React.useState(false)
@@ -187,20 +187,44 @@ const [result, setResult] = React.useState(false);
     setShowInfoToolTip(false)
   }
 
-  //регистрируем пользователя
+  //регистрируем пользователя +
   function handleRegister(data) {
     const { email, password } = data;
     auth.register(email, password)
     .then (() => {
-      console.log(data)
+      //console.log(data)
       //alert('Регистрация прошла успешно')//работает 
       setResult(true)
       setShowInfoToolTip(true)
+      //переходим к авторизации пользователя
+      navigate('/sign-in', {
+        replace: true
+      })
     })
-    .catch((err) => {
-      console.log('ОШИБКА РЕГИСТРАЦИИ')
+     .catch(() => {
+      //console.log('ОШИБКА РЕГИСТРАЦИИ')
       setResult(false)
       setShowInfoToolTip(true)
+    })
+  }
+
+  //авторизируем пользователя 
+  function handleAutorization (data) {
+    const { email, password } = data;
+    auth.authorize(email, password)
+    .then ((data) => {
+      //console.log(data)
+      alert('Авторизация прошла успешно')
+      if(data.token) {
+        console.log(data.token);
+        localStorage.setItem('jwt', data.token);
+        console.log('записали данные токена в localStorage');
+        handleLogin();
+        navigate('/');
+      }
+    })
+    .catch(() => {
+      console.log('ОШИБКА АВТОРИЗАЦИИ')
     })
   }
 
@@ -234,7 +258,7 @@ const [result, setResult] = React.useState(false);
               onCardDelete={handleCardDelete}
             />} /> */}
           <Route path='/sign-up' element={<Register handleDataForm={handleRegister}/>} />
-          <Route path='/sign-in' element={<Login />} />
+          <Route path='/sign-in' element={<Login handleDataForm={handleAutorization}/>} />
 
         </Routes>
 

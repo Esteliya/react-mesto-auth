@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import Main from './Main';
@@ -12,9 +12,28 @@ import CurrentUserContext from '../contexts/CurrentUserContext';
 import api from '../utils/Api';
 import Register from './Register';
 import Login from './Login';
-import PopupRegisterInfo from './PopupRegisterInfo'
+import InfoTooltip from './InfoTooltip'
+import ProtectedRoute from './ProtectedRoute';
+import * as auth from '../utils/Auth';
 
 function App() {
+  const navigate = useNavigate();
+  //контекст логина
+  const [loggedIn, setLoggedIn] = React.useState(false);
+
+  //контекст данных пользователя 
+  const [userData, setUserData] = React.useState({ email: '', password: '' });
+
+  const handleLogin = ({ email, password }) => {
+    setLoggedIn(true);
+    setUserData({ email, password });
+  }
+//контекст попапа оповещения хода регистрации
+const [showInfoToolTip, setShowInfoToolTip] = React.useState(false)
+
+const [result, setResult] = React.useState(false);
+
+
   //контекст текущего пользователя
   const [currentUser, setCurrentUser] = React.useState({});
 
@@ -158,13 +177,6 @@ function App() {
     //console.log(`удалили карточку ${card._id}`);
   }
 
-  //редактировать аватар профиля
-/*   const [ischeckRegister, setIscheckRegister] = React.useState(false);
-
-  function handleRegister() {
-    setIscheckRegister(true);
-  };
- */
   //закрываем попапы по крестику
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
@@ -172,18 +184,46 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     //setIscheckRegister(false);
     setSelectedCard({});
+    setShowInfoToolTip(false)
+  }
+
+  //регистрируем пользователя
+  function handleRegister(data) {
+    const { email, password } = data;
+    auth.register(email, password)
+    .then (() => {
+      console.log(data)
+      //alert('Регистрация прошла успешно')//работает 
+      setResult(true)
+      setShowInfoToolTip(true)
+    })
+    .catch((err) => {
+      console.log('ОШИБКА РЕГИСТРАЦИИ')
+      setResult(false)
+      setShowInfoToolTip(true)
+    })
   }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header 
-        name="Войти"
-        link="/sign-in"
-        email="test@gmail.com"
+        <Header
+          name="Войти"
+          link="/sign-in"
+          email="test@gmail.com"
         />
         <Routes>
-          <Route path='/' element={
+          {/* <Route path='/' element={loggedIn ? <Navigate to='/sign-up' /> : <Navigate to='/sign-in' />} replace /> */}
+          <Route path='/' element={<ProtectedRoute
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onEditAvatar={handleEditAvatarClick}
+            onCardClick={handleCardClick}
+            cards={cards}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
+            loggedIn={loggedIn} element={Main} />} />
+          {/* <Route path='/' element={
             <Main
               onEditProfile={handleEditProfileClick}
               onAddPlace={handleAddPlaceClick}
@@ -192,16 +232,17 @@ function App() {
               cards={cards}
               onCardLike={handleCardLike}
               onCardDelete={handleCardDelete}
-            />} />
-          <Route path='/sign-up' element={<Register />} />
+            />} /> */}
+          <Route path='/sign-up' element={<Register handleDataForm={handleRegister}/>} />
           <Route path='/sign-in' element={<Login />} />
 
         </Routes>
 
         <Footer />
-        <PopupRegisterInfo
-        /* isOpen={ischeckRegister}
-        onClose={closeAllPopups}  */
+        <InfoTooltip
+        isOpen={showInfoToolTip}
+        onClose={closeAllPopups}
+        res={result}
         />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}

@@ -27,6 +27,12 @@ function AddPlacePopup(props) {
         });
     }
 
+    
+    //валидация: переменные состояния ???
+
+    //класс стилей ошибки инпута
+    const activError = 'name-card-error edit-form__personalia-error'
+
     return (
         <PopupWithForm
             name='add-card'
@@ -43,9 +49,9 @@ function AddPlacePopup(props) {
                 name="name"
                 placeholder="Название"
                 className="edit-form__personalia"
-                onChange={handleNameChange} 
+                onChange={handleNameChange}
                 value={name}/>
-            <span className="name-card-error edit-form__personalia-error" />
+            <span className= {activError}>Ошибка</span>
             <input
                 type="url"
                 required
@@ -53,9 +59,9 @@ function AddPlacePopup(props) {
                 name="link"
                 placeholder="Ссылка на картинку"
                 className="edit-form__personalia"
-                onChange={handleLinkChange} 
+                onChange={handleLinkChange}
                 value={link}/>
-            <span className="images-error edit-form__personalia-error" />
+            <span className={activError}>Ошибка</span>
         </ PopupWithForm>
     )
 }

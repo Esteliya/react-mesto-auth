@@ -12,11 +12,12 @@ function EditProfilePopup(props) {
     const [name, setName] = React.useState(currentUser.name);
     const [description, setDescription] = React.useState(currentUser.about);
 
-    //используем данные, полученные из api выше
+        //используем данные, полученные из api выше
     React.useEffect(() => {
         setName(currentUser.name);
         setDescription(currentUser.about);
     }, [currentUser, isOpen ]);
+
 
     //обработчик поля имени
     function handleNameChange(evt) {
@@ -47,7 +48,6 @@ function EditProfilePopup(props) {
             onSubmit={handleSubmit}>
             <input
                 type="text"
-                id="email"
                 required
                 minLength="2" maxLength="40"
                 name="name"
@@ -55,10 +55,9 @@ function EditProfilePopup(props) {
                 className="edit-form__personalia"
                 value={(name !== null && name !== undefined) ? name : ''}
                 onChange={handleNameChange} />
-            <span className="firstname-error edit-form__personalia-error" />
+            <span className="firstname-error edit-form__personalia-error"></span> 
             <input
                 type="text"
-                id="password"
                 required
                 minLength="5" maxLength="20"
                 name="about"
@@ -66,7 +65,7 @@ function EditProfilePopup(props) {
                 className="edit-form__personalia"
                 value={(description !== null && description !== undefined) ? description : ''}
                 onChange={handleDescriptionChange} />
-            <span className="profession-error edit-form__personalia-error" />
+            <span className="profession-error edit-form__personalia-error"></span>
         </PopupWithForm>
     )
 }

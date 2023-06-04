@@ -1,5 +1,6 @@
 .edit-form__personalia-error {
   display: none;
+ /*  display: block; */
   font-family: 'Inter';
   font-style: normal;
   font-weight: 400;

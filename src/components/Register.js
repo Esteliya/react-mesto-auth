@@ -2,13 +2,16 @@ import React from 'react';
 import Authorization from './Authorization'
 
 function Register(props) {
-    const { } = props;
+    //бросаем данные для обработки выше
+    const { handleDataForm } = props;
+
 
     return (
         <Authorization
             title="Регистрация"
             name="register"
-            button="Зарегистрироваться">
+            button="Зарегистрироваться"
+            handleDataForm={handleDataForm}>
             <p className="authorization__question">Уже зарегистрированы?
                 <a href="/sign-in" name="Войти" className="authorization__question_link"> Войти</a>
             </p>

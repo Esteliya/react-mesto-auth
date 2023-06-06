@@ -21,17 +21,26 @@ function App() {
   //контекст логина
   const [loggedIn, setLoggedIn] = React.useState(false);
 
-  //контекст данных пользователя 
-  const [userInfo, setUserInfo] = React.useState({ email: '', password: '' });
+  //контекст данных пользователя - лишний стейт
+  //const [userInfo, setUserInfo] = React.useState({ email: '', password: '' });
 
-  const handleLogin = () => {
-    setLoggedIn(true);
-    //setUserInfo({ email, password });
+  //контекст данных пользователя - email
+  const [userEmail, setUserEmail] = React.useState('');
+
+
+  const handleLogin = (data) => {
+    setLoggedIn(true);//залогинились (правда)
+    //console.log(data);
+    //console.log(data.email);
+    //console.log(data.password);
+    //setUserInfo({ data });
+    setUserEmail(data.email)
+    //console.log(data.email);
   }
-//контекст попапа оповещения хода регистрации
-const [showInfoToolTip, setShowInfoToolTip] = React.useState(false)
+  //контекст попапа оповещения хода регистрации
+  const [showInfoToolTip, setShowInfoToolTip] = React.useState(false)
 
-const [result, setResult] = React.useState(false);
+  const [result, setResult] = React.useState(false);
 
 
   //контекст текущего пользователя
@@ -57,13 +66,13 @@ const [result, setResult] = React.useState(false);
       .then((cardsData) => {
         //выводим на страницу карточки
         setCards(cardsData);
-        //console.log('обновились данные');
+        console.log('обновились данные');
         //console.log(cardsData);
       })
       .catch((err) => {
         console.error(`Ошибка: ${err}`);
       });
-  }, []);//обновляем при изменении в cards
+  }, []);//обновляем 1 раз
 
   //добавить карточку
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
@@ -191,41 +200,85 @@ const [result, setResult] = React.useState(false);
   function handleRegister(data) {
     const { email, password } = data;
     auth.register(email, password)
-    .then (() => {
-      //console.log(data)
-      //alert('Регистрация прошла успешно')//работает 
-      setResult(true)
-      setShowInfoToolTip(true)
-      //переходим к авторизации пользователя
-      navigate('/sign-in', {
-        replace: true
+      .then(() => {
+        //console.log(data)
+        //alert('Регистрация прошла успешно')//работает 
+        setResult(true)
+        setShowInfoToolTip(true)
+        //переходим к авторизации пользователя
+        navigate('/sign-up', {
+          replace: true
+        })
       })
-    })
-     .catch(() => {
-      //console.log('ОШИБКА РЕГИСТРАЦИИ')
-      setResult(false)
-      setShowInfoToolTip(true)
-    })
+      .catch((err) => {
+        //console.log('ОШИБКА РЕГИСТРАЦИИ')
+        console.error(`Ошибка: ${err}`);
+        setResult(false)
+        setShowInfoToolTip(true)
+      })
   }
 
   //авторизируем пользователя 
-  function handleAutorization (data) {
+  function handleAutorization(data) {
     const { email, password } = data;
+    //setUserInfo(data);
+    //console.log(data);
+    //console.log(data.email);
+    //console.log(data.password);
+    //сохранили в объект данные из полей при авторизации —> используем после успешной авторизации
+    const dataAuthUser = {
+      email: data.email,
+      password: data.password
+    };
     auth.authorize(email, password)
-    .then ((data) => {
-      //console.log(data)
-      alert('Авторизация прошла успешно')
-      if(data.token) {
-        console.log(data.token);
-        localStorage.setItem('jwt', data.token);
-        console.log('записали данные токена в localStorage');
-        handleLogin();
-        navigate('/');
-      }
-    })
-    .catch(() => {
-      console.log('ОШИБКА АВТОРИЗАЦИИ')
-    })
+      .then((data) => {
+        //console.log(data);
+        alert('Авторизация прошла успешно')
+        if (data.token) {
+          //console.log('получаем токен');
+          //console.log(data.token);
+          localStorage.setItem('jwt', data.token);
+          console.log('записали данные токена в localStorage');
+          //после успешной авторизации передаем данные авторизировавшегося пользователя дальше
+          handleLogin(dataAuthUser);//???
+          console.log(dataAuthUser);
+          navigate('/');
+        }
+      })
+      .catch((err) => {
+        console.error(`Ошибка: ${err}`);
+      });
+  }
+
+  //проверяем наличие токена в localStorage
+  const tockenCheck = () => {    
+    const jwt = localStorage.getItem('jwt');
+
+    if (jwt) {
+      auth.checkToken(jwt)
+        .then(user => {
+          setLoggedIn(false);
+          handleLogin(user);
+          navigate('/');
+        })
+        .catch(console.log);
+    } else {
+      setLoggedIn(true);
+    }
+  }
+//при загрузке страницы проверяем токен 
+  React.useEffect(() => {
+    tockenCheck();
+  }, [])
+
+  //удаляем токен - для кнопки ВЫХОД (сделать!!) - проверить!!
+  // onClick={handleExit} - сбросить в Header  ???
+  function handleExit() {
+    if (localStorage.getItem("token")) {
+      localStorage.removeItem("token");
+      navigate("/sign-in");//перебрасываем на авторизацию
+      setLoggedIn(false);//незалогинен
+    }
   }
 
   return (
@@ -234,21 +287,16 @@ const [result, setResult] = React.useState(false);
         <Header
           name="Войти"
           link="/sign-in"
-          email="test@gmail.com"
+          email={userEmail}
+          loggedIn={loggedIn}
         />
         <Routes>
-          {/* <Route path='/' element={loggedIn ? <Navigate to='/sign-up' /> : <Navigate to='/sign-in' />} replace /> */}
-          <Route path='/' element={<ProtectedRoute
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            onCardClick={handleCardClick}
-            cards={cards}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
-            loggedIn={loggedIn} element={Main} />} />
-          {/* <Route path='/' element={
-            <Main
+
+        {/* <Route path='/' element={!loggedIn ? <Navigate to='/sign-up' /> :  <Navigate to='/sign-in' />} replace/> */}
+
+        {/* <Route path='/' element={loggedIn ? <Navigate to='/' /> : <Navigate to='/sign-up' />} replace /> */}
+
+        <Route path='/' element={!loggedIn ? <Navigate to='/sign-up' /> :  <ProtectedRoute
               onEditProfile={handleEditProfileClick}
               onAddPlace={handleAddPlaceClick}
               onEditAvatar={handleEditAvatarClick}
@@ -256,17 +304,34 @@ const [result, setResult] = React.useState(false);
               cards={cards}
               onCardLike={handleCardLike}
               onCardDelete={handleCardDelete}
-            />} /> */}
-          <Route path='/sign-up' element={<Register handleDataForm={handleRegister}/>} />
-          <Route path='/sign-in' element={<Login handleDataForm={handleAutorization}/>} />
+              loggedIn={loggedIn}
+              element={Main} />} replace />
+
+          {/* <Route path='/' element={
+            <ProtectedRoute
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onEditAvatar={handleEditAvatarClick}
+              onCardClick={handleCardClick}
+              cards={cards}
+              onCardLike={handleCardLike}
+              onCardDelete={handleCardDelete}
+              loggedIn={loggedIn}
+              element={Main} />
+          } /> */}
+
+         
+          <Route path='/sign-up' element={<Register handleDataForm={handleRegister} />} />
+          <Route path='/sign-in' element={<Login handleDataForm={handleAutorization} />} />
 
         </Routes>
 
-        <Footer />
+        {loggedIn ? <Footer /> : ''}
+        {/* <Footer /> */}
         <InfoTooltip
-        isOpen={showInfoToolTip}
-        onClose={closeAllPopups}
-        res={result}
+          isOpen={showInfoToolTip}
+          onClose={closeAllPopups}
+          res={result}
         />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}

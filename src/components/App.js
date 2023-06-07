@@ -273,11 +273,11 @@ function App() {
     tockenCheck();
   }, [])
 
-  //удаляем токен - для кнопки ВЫХОД (сделать!!) - проверить!!
+  //удаляем токен - для кнопки ВЫХОД - работает - пробросить в Header!!! 
   // onClick={handleExit} - сбросить в Header  ???
   function handleExit() {
-    if (localStorage.getItem("token")) {
-      localStorage.removeItem("token");
+    if (localStorage.getItem('jwt')) {
+      localStorage.removeItem("jwt");
       navigate("/sign-in");//перебрасываем на авторизацию
       setLoggedIn(false);//незалогинен
     }
@@ -294,10 +294,6 @@ function App() {
         />
         <Routes>
 
-        {/* <Route path='/' element={!loggedIn ? <Navigate to='/sign-up' /> :  <Navigate to='/sign-in' />} replace/> */}
-
-        {/* <Route path='/' element={loggedIn ? <Navigate to='/' /> : <Navigate to='/sign-up' />} replace /> */}
-
         <Route path='/' element={!loggedIn ? <Navigate to='/sign-up' /> :  <ProtectedRoute
               onEditProfile={handleEditProfileClick}
               onAddPlace={handleAddPlaceClick}
@@ -308,20 +304,6 @@ function App() {
               onCardDelete={handleCardDelete}
               loggedIn={loggedIn}
               element={Main} />} replace />
-
-          {/* <Route path='/' element={
-            <ProtectedRoute
-              onEditProfile={handleEditProfileClick}
-              onAddPlace={handleAddPlaceClick}
-              onEditAvatar={handleEditAvatarClick}
-              onCardClick={handleCardClick}
-              cards={cards}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
-              loggedIn={loggedIn}
-              element={Main} />
-          } /> */}
-
          
           <Route path='/sign-up' element={<Register handleDataForm={handleRegister} />} />
           <Route path='/sign-in' element={<Login handleDataForm={handleAutorization} />} />
@@ -330,7 +312,7 @@ function App() {
         </Routes>
 
         {loggedIn ? <Footer /> : ''}
-        {/* <Footer /> */}
+
         <InfoTooltip
           isOpen={showInfoToolTip}
           onClose={closeAllPopups}

@@ -12,6 +12,7 @@ import CurrentUserContext from '../contexts/CurrentUserContext';
 import api from '../utils/Api';
 import Register from './Register';
 import Login from './Login';
+import NotFound from './NotFound'
 import InfoTooltip from './InfoTooltip'
 import ProtectedRoute from './ProtectedRoute';
 import * as auth from '../utils/Auth';
@@ -65,6 +66,7 @@ function App() {
     api.getArrCards()
       .then((cardsData) => {
         //выводим на страницу карточки
+        console.log('запросили данные карточек');
         setCards(cardsData);
         console.log('обновились данные');
         //console.log(cardsData);
@@ -323,6 +325,7 @@ function App() {
          
           <Route path='/sign-up' element={<Register handleDataForm={handleRegister} />} />
           <Route path='/sign-in' element={<Login handleDataForm={handleAutorization} />} />
+          <Route path='*' element={<NotFound/>} replace/>
 
         </Routes>
 

@@ -1,9 +1,9 @@
-.header__link {
+.header__email {
     display: inline-block;
     width: auto;
     margin: 0;
     font-weight: 500;
 }
-.header__link:hover {
+.header__email:hover {
     opacity: 0.6;
 }

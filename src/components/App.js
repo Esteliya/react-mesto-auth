@@ -34,12 +34,14 @@ function App() {
 
   const handleLogin = (data) => {
     setLoggedIn(true);//залогинились (правда)
-    //console.log(data);
+    console.log(data.data.email);
+    console.log(data.email);
+    console.log(data);
     //console.log(data.email);
     //console.log(data.password);
     //setUserInfo({ data });
-    setUserEmail(data.email)
-    //console.log(data.email);
+    setUserEmail(data.data.email)
+    //console.log(userEmail);
   }
   //контекст попапа оповещения хода регистрации
   const [showInfoToolTip, setShowInfoToolTip] = React.useState(false)
@@ -235,18 +237,23 @@ function App() {
       email: data.email,
       password: data.password
     };
+    console.log(dataAuthUser);
     auth.authorize(email, password)
       .then((data) => {
         //console.log(data);
         //alert('Авторизация прошла успешно')
         if (data.token) {
-          //console.log('получаем токен');
-          //console.log(data.token);
+          console.log('получаем токен');
+          console.log(data.token);
           localStorage.setItem('jwt', data.token);
-          console.log('записали данные токена в localStorage');
+          //console.log('записали данные токена в localStorage');
           //после успешной авторизации передаем данные авторизировавшегося пользователя дальше
-          handleLogin(dataAuthUser);
+          console.log('1');
           console.log(dataAuthUser);
+          handleLogin(dataAuthUser);
+          console.log('2');
+          console.log(dataAuthUser);
+          console.log('3');
           navigate('/');
         }
       })
@@ -262,13 +269,19 @@ function App() {
     if (jwt) {
       auth.checkToken(jwt)
         .then(user => {
-          setLoggedIn(false);
+          //setLoggedIn(false);
+          //setLoggedIn(true);//уже есть в handleLogin
           handleLogin(user);
+          //console.log(user);
+          //console.log(user.data.email);
+          //setUserEmail(user.data.emai);
+          //console.log(userEmail);
           navigate('/');
         })
         .catch(console.log);
     } else {
-      setLoggedIn(true);
+      //setLoggedIn(true);
+      setLoggedIn(false);
     }
   }
 //при загрузке страницы проверяем токен 
@@ -280,7 +293,7 @@ function App() {
   function handleExitProfile() {
     if (localStorage.getItem('jwt')) {
       localStorage.removeItem("jwt");
-      navigate("/sign-in");//перебрасываем на авторизацию
+      //navigate("/sign-in");//перебрасываем на авторизацию - есть в link в Header 
       setLoggedIn(false);//незалогинен
     }
   }
@@ -296,7 +309,7 @@ function App() {
         />
         <Routes>
 
-        <Route path='/' element={!loggedIn ? <Navigate to='/sign-up' /> :  <ProtectedRoute
+        <Route exact path='/' element={!loggedIn ? <Navigate to='/sign-up' /> :  <ProtectedRoute
               onEditProfile={handleEditProfileClick}
               onAddPlace={handleAddPlaceClick}
               onEditAvatar={handleEditAvatarClick}
@@ -308,8 +321,8 @@ function App() {
               setCurrentRoute={setCurrentRoute}
               element={Main} />} replace />
          
-          <Route path='/sign-up' element={<Register handleDataForm={handleRegister} setCurrentRoute={setCurrentRoute}/>} />
-          <Route path='/sign-in' element={<Login handleDataForm={handleAutorization} setCurrentRoute={setCurrentRoute}/>} />
+          <Route exact path='/sign-up' element={<Register handleDataForm={handleRegister} setCurrentRoute={setCurrentRoute}/>} />
+          <Route exact path='/sign-in' element={<Login handleDataForm={handleAutorization} setCurrentRoute={setCurrentRoute}/>} />
           <Route path='*' element={<NotFound />} replace/>
 
         </Routes>

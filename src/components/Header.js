@@ -6,6 +6,7 @@ function Header(props) {
 
     const [headerData, setHeaderData] = React.useState({});
 
+
 /* const headerData = {
     name: 'тест',
     link: '/qwer',
@@ -20,34 +21,40 @@ function Header(props) {
     React.useEffect(() => {
         //console.log('useEffect срабатывает');
         //console.log(currentRoute);
+        //console.log(loggedIn);
+        //console.log(email);
         switch (currentRoute) {
             case "/":
-                console.log('мы на главной странице');
+                //console.log('мы на главной странице');
                 setHeaderData ({
                     name: 'Выход',
-                    link: '/'
+                    link: '/sign-in'
                 })
+                //console.log(loggedIn);
                 break
             case "/sign-up":
-                console.log('мы на странице регистрации');
+                //console.log('мы на странице регистрации');
                 setHeaderData ({
                     name: 'Вход',
                     link: '/sign-in'
                 })
+                //console.log(loggedIn);
                 break
             case "/sign-in":
-                console.log('мы на странице авторизации');
+                //console.log('мы на странице авторизации');
                 setHeaderData ({
                     name: 'Регистрация',
                     link: '/sign-up'
                 })
+                //console.log(loggedIn);
                 break
             default:
-                console.log('мы на странице 404');
+                //console.log('мы на странице 404');
                 setHeaderData ({
                     name: 'На главную',
                     link: '/'
                 })
+                //console.log(loggedIn);
                 break
         }
     }, [currentRoute])

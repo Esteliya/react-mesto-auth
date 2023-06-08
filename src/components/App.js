@@ -292,6 +292,7 @@ function App() {
           email={userEmail}
           loggedIn={loggedIn}
           currentRoute={currentRoute}
+          handleExitProfile={handleExitProfile}
         />
         <Routes>
 

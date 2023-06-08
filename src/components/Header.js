@@ -2,7 +2,7 @@ import React from 'react';
 import headerLogo from '../images/logo-mesto.svg';//лого Место
 
 function Header(props) {
-    const { email, loggedIn, currentRoute } = props;
+    const { email, loggedIn, currentRoute, handleExitProfile } = props;
 
     const [headerData, setHeaderData] = React.useState({});
 
@@ -61,7 +61,11 @@ function Header(props) {
                 className="logo" />
             <nav className='header__menu'>
                 {loggedIn ? <p className="header__email">{email}</p> : ''}
-                <a className="header__link" href={headerData.link}>{headerData.name}</a>
+                <a 
+                className="header__link" 
+                href={headerData.link}
+                onClick={headerData.name === "Выход" ? handleExitProfile : null}
+                >{headerData.name}</a>
             </nav>
         </header>
     )

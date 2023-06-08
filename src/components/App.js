@@ -34,13 +34,13 @@ function App() {
 
   const handleLogin = (data) => {
     setLoggedIn(true);//залогинились (правда)
-    console.log(data.data.email);
     console.log(data.email);
-    console.log(data);
     //console.log(data.email);
+    console.log(data);
+    console.log(data.data);
     //console.log(data.password);
     //setUserInfo({ data });
-    setUserEmail(data.data.email)
+    setUserEmail(data.email)
     //console.log(userEmail);
   }
   //контекст попапа оповещения хода регистрации
@@ -234,8 +234,8 @@ function App() {
     //console.log(data.password);
     //сохранили в объект данные из полей при авторизации —> используем после успешной авторизации
     const dataAuthUser = {
-      email: data.email,
-      password: data.password
+      email: email,
+      password: password
     };
     console.log(dataAuthUser);
     auth.authorize(email, password)
@@ -271,8 +271,8 @@ function App() {
         .then(user => {
           //setLoggedIn(false);
           //setLoggedIn(true);//уже есть в handleLogin
-          handleLogin(user);
-          //console.log(user);
+          console.log(user);
+          handleLogin(user.data);
           //console.log(user.data.email);
           //setUserEmail(user.data.emai);
           //console.log(userEmail);

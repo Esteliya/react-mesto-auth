@@ -28,6 +28,9 @@ function App() {
   //контекст данных пользователя - email
   const [userEmail, setUserEmail] = React.useState('');
 
+  //контекст роутов сайта 
+  const [currentRoute, setCurrentRoute] = React.useState('');
+
 
   const handleLogin = (data) => {
     setLoggedIn(true);//залогинились (правда)
@@ -66,9 +69,9 @@ function App() {
     api.getArrCards()
       .then((cardsData) => {
         //выводим на страницу карточки
-        console.log('запросили данные карточек');
+        //console.log('запросили данные карточек');
         setCards(cardsData);
-        console.log('обновились данные');
+        //console.log('обновились данные');
         //console.log(cardsData);
       })
       .catch((err) => {
@@ -235,14 +238,14 @@ function App() {
     auth.authorize(email, password)
       .then((data) => {
         //console.log(data);
-        alert('Авторизация прошла успешно')
+        //alert('Авторизация прошла успешно')
         if (data.token) {
           //console.log('получаем токен');
           //console.log(data.token);
           localStorage.setItem('jwt', data.token);
           console.log('записали данные токена в localStorage');
           //после успешной авторизации передаем данные авторизировавшегося пользователя дальше
-          handleLogin(dataAuthUser);//???
+          handleLogin(dataAuthUser);
           console.log(dataAuthUser);
           navigate('/');
         }
@@ -253,7 +256,7 @@ function App() {
   }
 
   //проверяем наличие токена в localStorage
-  const tockenCheck = () => {    
+  function tockenCheck () {    
     const jwt = localStorage.getItem('jwt');
 
     if (jwt) {
@@ -274,8 +277,7 @@ function App() {
   }, [])
 
   //удаляем токен - для кнопки ВЫХОД - работает - пробросить в Header!!! 
-  // onClick={handleExit} - сбросить в Header  ???
-  function handleExit() {
+  function handleExitProfile() {
     if (localStorage.getItem('jwt')) {
       localStorage.removeItem("jwt");
       navigate("/sign-in");//перебрасываем на авторизацию
@@ -287,10 +289,9 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Header
-          name="Войти"
-          link="/sign-in"
           email={userEmail}
           loggedIn={loggedIn}
+          currentRoute={currentRoute}
         />
         <Routes>
 
@@ -303,11 +304,12 @@ function App() {
               onCardLike={handleCardLike}
               onCardDelete={handleCardDelete}
               loggedIn={loggedIn}
+              setCurrentRoute={setCurrentRoute}
               element={Main} />} replace />
          
-          <Route path='/sign-up' element={<Register handleDataForm={handleRegister} />} />
-          <Route path='/sign-in' element={<Login handleDataForm={handleAutorization} />} />
-          <Route path='*' element={<NotFound/>} replace/>
+          <Route path='/sign-up' element={<Register handleDataForm={handleRegister} setCurrentRoute={setCurrentRoute}/>} />
+          <Route path='/sign-in' element={<Login handleDataForm={handleAutorization} setCurrentRoute={setCurrentRoute}/>} />
+          <Route path='*' element={<NotFound />} replace/>
 
         </Routes>
 

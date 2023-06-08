@@ -3,7 +3,12 @@ import Authorization from './Authorization'
 
 function Login(props) {
     //бросаем данные для обработки выше
-    const { handleDataForm } = props;
+    const { handleDataForm, setCurrentRoute } = props;
+
+    React.useEffect(() => {
+        setCurrentRoute("/sign-in");
+        //console.log(setCurrentRoute);
+      }, []);
 
     return (
         <Authorization

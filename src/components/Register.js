@@ -3,8 +3,11 @@ import Authorization from './Authorization'
 
 function Register(props) {
     //бросаем данные для обработки выше
-    const { handleDataForm } = props;
+    const { handleDataForm, setCurrentRoute } = props;
 
+    React.useEffect(() => {
+        setCurrentRoute("/sign-up");
+      }, []);
 
     return (
         <Authorization

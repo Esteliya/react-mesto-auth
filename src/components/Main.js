@@ -4,11 +4,13 @@ import { useContext } from "react";
 import CurrentUserContext from '../contexts/CurrentUserContext.js'
 
 function Main(props) {
-    const { onEditProfile, onAddPlace, onEditAvatar, onCardClick, cards, onCardLike, onCardDelete} = props;
+    const { onEditProfile, onAddPlace, onEditAvatar, onCardClick, cards, onCardLike, onCardDelete, setCurrentRoute} = props;
 
     const currentUser = useContext(CurrentUserContext);
 
-
+    React.useEffect(() => {
+        setCurrentRoute("/");
+      }, []);
 
     return (
         <main>

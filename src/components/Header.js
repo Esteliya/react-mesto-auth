@@ -11,12 +11,14 @@ function Header(props) {
     name: 'тест',
     link: '/qwer',
 } */
-    /* const handleClickExit = () => {
+/*     const handleClickExit = () => {
+        console.log('ds[jlbv из профиля');
         if (currentRoute === "/") {
             //выходим из профиля - сверху бросаем обработчик удаления токена +
             //onOutProfile();
             console.log('удаляем токен из LocalStorage')
-        } */
+        }
+    } */
 
     React.useEffect(() => {
         //console.log('useEffect срабатывает');

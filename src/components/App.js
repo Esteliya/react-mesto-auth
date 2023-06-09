@@ -31,16 +31,16 @@ function App() {
   //контекст роутов сайта 
   const [currentRoute, setCurrentRoute] = React.useState('');
 
-
-  const handleLogin = (data) => {
+//деструктурировали и забрали только email
+  const handleLogin = ({email}) => {
     setLoggedIn(true);//залогинились (правда)
-    console.log(data.email);
+    //console.log(email);
     //console.log(data.email);
-    console.log(data);
-    console.log(data.data);
+    //console.log(data);
+    //console.log(data.data);
     //console.log(data.password);
     //setUserInfo({ data });
-    setUserEmail(data.email)
+    setUserEmail(email)
     //console.log(userEmail);
   }
   //контекст попапа оповещения хода регистрации
@@ -63,23 +63,40 @@ function App() {
         console.error(`Ошибка: ${err}`);
       });
   }, []);
+  
 
   //контекст карточек
   const [cards, setCards] = React.useState([]);
 
-  React.useEffect(() => {
-    api.getArrCards()
+  //запрашиваем данные карточек с сервера 
+function getCards () {
+  console.log('запросили данные карточек');
+  api.getArrCards()
       .then((cardsData) => {
         //выводим на страницу карточки
         //console.log('запросили данные карточек');
         setCards(cardsData);
-        //console.log('обновились данные');
+        console.log('обновились данные');
         //console.log(cardsData);
       })
       .catch((err) => {
         console.error(`Ошибка: ${err}`);
       });
-  }, []);//обновляем 1 раз
+}
+
+/*   React.useEffect(() => {
+    api.getArrCards()
+      .then((cardsData) => {
+        //выводим на страницу карточки
+        //console.log('запросили данные карточек');
+        setCards(cardsData);
+        console.log('обновились данные');
+        //console.log(cardsData);
+      })
+      .catch((err) => {
+        console.error(`Ошибка: ${err}`);
+      });
+  }, []);//обновляем 1 раз */
 
   //добавить карточку
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
@@ -237,23 +254,24 @@ function App() {
       email: email,
       password: password
     };
-    console.log(dataAuthUser);
+    //console.log(dataAuthUser);
     auth.authorize(email, password)
       .then((data) => {
         //console.log(data);
         //alert('Авторизация прошла успешно')
         if (data.token) {
-          console.log('получаем токен');
-          console.log(data.token);
+          //console.log('получаем токен');
+          //console.log(data.token);
           localStorage.setItem('jwt', data.token);
-          //console.log('записали данные токена в localStorage');
+          console.log('записали данные токена в localStorage');
           //после успешной авторизации передаем данные авторизировавшегося пользователя дальше
-          console.log('1');
-          console.log(dataAuthUser);
+          //console.log('1');
+          //console.log(dataAuthUser);
+          getCards();
           handleLogin(dataAuthUser);
-          console.log('2');
+          //console.log('2');
           console.log(dataAuthUser);
-          console.log('3');
+          //console.log('3');
           navigate('/');
         }
       })
@@ -269,16 +287,21 @@ function App() {
     if (jwt) {
       auth.checkToken(jwt)
         .then(user => {
+          console.log('сравнили токен - есть');
           //setLoggedIn(false);
-          //setLoggedIn(true);//уже есть в handleLogin
-          console.log(user);
+          setLoggedIn(true);//уже есть в handleLogin
+          //console.log(user);
+          getCards();
           handleLogin(user.data);
           //console.log(user.data.email);
           //setUserEmail(user.data.emai);
           //console.log(userEmail);
-          navigate('/');
+          navigate('/'); //переходим к карточкам
+          console.log('перебросило на главную');
         })
-        .catch(console.log);
+        .catch((err) => {
+          console.error(`Ошибка: ${err}`);
+        });
     } else {
       //setLoggedIn(true);
       setLoggedIn(false);
@@ -293,7 +316,7 @@ function App() {
   function handleExitProfile() {
     if (localStorage.getItem('jwt')) {
       localStorage.removeItem("jwt");
-      //navigate("/sign-in");//перебрасываем на авторизацию - есть в link в Header 
+      navigate("/sign-in");//перебрасываем на авторизацию - есть в link в Header 
       setLoggedIn(false);//незалогинен
     }
   }

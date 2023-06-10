@@ -10,11 +10,11 @@ const response = (res) => {
 
 }
 
-//запрос проверки ответа НЕ РАБОТАЕТ - ПРОВЕРИТЬ!!!
+/* //запрос проверки ответа НЕ РАБОТАЕТ - ПРОВЕРИТЬ!!!
 const request = (urlEndpoint, options) => {
     return fetch(`${BASE_URL}${urlEndpoint}`, options)
         .then(response);
-}
+} */
 
 //регистрация пользователя 
 export const register = (email, password) => {

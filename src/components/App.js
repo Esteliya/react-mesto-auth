@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import Main from './Main';
@@ -19,6 +20,7 @@ import * as auth from '../utils/Auth';
 
 function App() {
   const navigate = useNavigate();
+  const  location = useLocation();
   //контекст логина
   const [loggedIn, setLoggedIn] = React.useState(false);
 
@@ -52,7 +54,13 @@ function App() {
   //контекст текущего пользователя
   const [currentUser, setCurrentUser] = React.useState({});
 
-  React.useEffect(() => {
+
+  
+
+    React.useEffect(() => {
+    //проверяем наличие токена
+    tockenCheck();
+    //запрашиваем данные пользователя
     api.getUserInfo()
       .then((userData) => {
         //выводим на страницу данные профиля
@@ -272,7 +280,8 @@ function getCards () {
           //console.log('2');
           console.log(dataAuthUser);
           //console.log('3');
-          navigate('/');
+          //navigate('/');
+          tockenCheck();
         }
       })
       .catch((err) => {
@@ -283,6 +292,8 @@ function getCards () {
   //проверяем наличие токена в localStorage
   function tockenCheck () {    
     const jwt = localStorage.getItem('jwt');
+    //console.log(currentRoute);
+    //let route = currentRoute;
 
     if (jwt) {
       auth.checkToken(jwt)
@@ -293,11 +304,31 @@ function getCards () {
           //console.log(user);
           getCards();
           handleLogin(user.data);
+          console.log(location);
+          const path = location.pathname;
+          console.log(path);
+           switch (path) {
+            case "/":
+              navigate('/');
+              break
+              case "/sign-in":
+              navigate('/');
+              break
+              case "/sign-up":
+              navigate('/');
+              break
+          } 
+          
+         /*  if (path === '/') {
+            navigate('/');
+          } else {
+            navigate(path);
+          } */
           //console.log(user.data.email);
           //setUserEmail(user.data.emai);
           //console.log(userEmail);
-          navigate('/'); //переходим к карточкам
-          console.log('перебросило на главную');
+          //navigate('/'); //переходим к карточкам
+          
         })
         .catch((err) => {
           console.error(`Ошибка: ${err}`);
@@ -306,11 +337,12 @@ function getCards () {
       //setLoggedIn(true);
       setLoggedIn(false);
     }
+
   }
 //при загрузке страницы проверяем токен 
-  React.useEffect(() => {
+/*   React.useEffect(() => {
     tockenCheck();
-  }, [])
+  }, []) */
 
   //удаляем токен - для кнопки ВЫХОД - работает - пробросить в Header!!! 
   function handleExitProfile() {
@@ -346,11 +378,11 @@ function getCards () {
          
           <Route exact path='/sign-up' element={<Register handleDataForm={handleRegister} setCurrentRoute={setCurrentRoute}/>} />
           <Route exact path='/sign-in' element={<Login handleDataForm={handleAutorization} setCurrentRoute={setCurrentRoute}/>} />
-          <Route path='*' element={<NotFound />} replace/>
+          <Route path='*' element={<NotFound />} replace/> 
 
         </Routes>
 
-        {loggedIn ? <Footer /> : ''}
+        {loggedIn && <Footer />}
 
         <InfoTooltip
           isOpen={showInfoToolTip}

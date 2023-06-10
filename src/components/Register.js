@@ -7,7 +7,7 @@ function Register(props) {
 
     React.useEffect(() => {
         setCurrentRoute("/sign-up");
-      }, []);
+      }, [setCurrentRoute]);
 
     return (
         <Authorization

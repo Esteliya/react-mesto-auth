@@ -8,7 +8,7 @@ function Login(props) {
     React.useEffect(() => {
         setCurrentRoute("/sign-in");
         //console.log(setCurrentRoute);
-      }, []);
+      }, [setCurrentRoute]);
 
     return (
         <Authorization

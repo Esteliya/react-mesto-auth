@@ -13,6 +13,7 @@
 @import url(./blocks/authorization/__input-error/authorization__input-error.css);
 @import url(./blocks/authorization/__input-error/authorization__input-error_active.css);
 @import url(./blocks/authorization/__button/authorization__button.css);
+@import url(./blocks/authorization/__button/authorization__button_disabled.css);
 @import url(./blocks/authorization/__question/authorization__question.css);
 @import url(./blocks/authorization/__question/authorization__question_link.css);
 

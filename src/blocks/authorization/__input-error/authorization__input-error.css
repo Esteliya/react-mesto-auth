@@ -1,5 +1,6 @@
 .authorization__input-error {
-    display: none;
+    /* display: none; */
+    display: block;
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;

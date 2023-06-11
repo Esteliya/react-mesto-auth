@@ -363,7 +363,7 @@ function getCards () {
           handleExitProfile={handleExitProfile}
         />
         <Routes>
-
+          
         <Route exact path='/' element={!loggedIn ? <Navigate to='/sign-up' /> :  <ProtectedRoute
               onEditProfile={handleEditProfileClick}
               onAddPlace={handleAddPlaceClick}

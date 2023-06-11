@@ -38,6 +38,13 @@ function EditProfilePopup(props) {
         });
     }
 
+/*     React.useEffect (() => {
+            console.log('123');
+        
+
+    }, [name, description]) */
+
+
     return (
         <PopupWithForm
             name='profile'

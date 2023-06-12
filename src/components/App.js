@@ -27,6 +27,22 @@ function App() {
   //контекст данных пользователя - email
   const [userEmail, setUserEmail] = React.useState('');
 
+  //контекст карточек
+  const [cards, setCards] = React.useState([]);
+
+  //попап редактирования профиля
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
+
+  //попап редактирования аватара профиля
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
+
+  //попап добавления карточки
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+
+  //открываем zoom-попап 
+  const [selectedCard, setSelectedCard] = React.useState({});
+
+
   //контекст роутов сайта 
   const [currentRoute, setCurrentRoute] = React.useState('');
 
@@ -50,10 +66,16 @@ function App() {
   //контекст текущего пользователя
   const [currentUser, setCurrentUser] = React.useState({});
 
-
+  //текст попапа  оповещения хода регистрации
+  const textInfoTooltip = result ? 'Вы успешно зарегистрировались!' : 'Что-то пошло не так! Попробуйте ещё раз.';
 
   React.useEffect(() => {
     tockenCheck();//проверяем наличие токена
+  }, []);
+
+  //запрашиваем данные о пользователе с сервера 
+  function getUserData() {
+    //console.log('запросили данные пользователя');
     api.getUserInfo()//запрашиваем данные пользователя
       .then((userData) => {
         setCurrentUser(userData);//выводим на страницу данные профиля
@@ -62,12 +84,9 @@ function App() {
       .catch((err) => {
         console.error(`Ошибка: ${err}`);
       });
-  }, []);
+  }
 
   //КАРТОЧКИ
-  //контекст карточек
-  const [cards, setCards] = React.useState([]);
-
   //запрашиваем данные карточек с сервера 
   function getCards() {
     //console.log('запросили данные карточек');
@@ -126,9 +145,7 @@ function App() {
   }
 
   //ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ
-  //редактировать профиль
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
-
+  //редактирование пользователя
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
   };
@@ -145,9 +162,7 @@ function App() {
   }
 
 
-  //редактировать аватар профиля
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
-
+  //рредактирование аватара профиля
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   };
@@ -165,9 +180,7 @@ function App() {
   }
 
   //ПОПАПЫ
-  //добавить карточку
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
-
+  //добавление новой карточки
   function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
   };
@@ -187,9 +200,7 @@ function App() {
       });
   }
 
-  //открываем zoom-попап 
-  const [selectedCard, setSelectedCard] = React.useState({});
-
+  //открывает zoom-попап
   function handleCardClick(card) {
     setSelectedCard(card);
   }
@@ -262,6 +273,7 @@ function App() {
         .then(user => {
           //console.log('сравнили токен - есть');
           setLoggedIn(true);
+          getUserData();//запросили данные пользователя
           getCards();//запросили данные карточек с сервера
           handleLogin(user.data);
           //console.log(location);
@@ -333,6 +345,7 @@ function App() {
           isOpen={showInfoToolTip}
           onClose={closeAllPopups}
           res={result}
+          text={textInfoTooltip}
         />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}

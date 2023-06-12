@@ -27,7 +27,12 @@ function AddPlacePopup(props) {
         });
     }
 
-    
+    //используем данные, полученные из api выше
+    React.useEffect(() => {
+        setName('');
+        setLink('');
+    }, [isOpen]);
+
     //валидация: переменные состояния ???
 
     //класс стилей ошибки инпута
@@ -50,8 +55,8 @@ function AddPlacePopup(props) {
                 placeholder="Название"
                 className="edit-form__personalia"
                 onChange={handleNameChange}
-                value={name}/>
-            <span className= {activError}>Ошибка</span>
+                value={name} />
+            <span className={activError}>Ошибка</span>
             <input
                 type="url"
                 required
@@ -60,7 +65,7 @@ function AddPlacePopup(props) {
                 placeholder="Ссылка на картинку"
                 className="edit-form__personalia"
                 onChange={handleLinkChange}
-                value={link}/>
+                value={link} />
             <span className={activError}>Ошибка</span>
         </ PopupWithForm>
     )

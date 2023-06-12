@@ -55,20 +55,15 @@ function Authorization(props) {
     }
 
     React.useEffect(() => {
-        //console.log('123');
-
         const isEmailFilled = email.length > 6;
         const isPasswordFilled = password.length > 5;
-
-        console.log(isEmailFilled, isPasswordFilled);
-        console.log(email.validationMassege);
         setFormValidity({
             emailValid: isEmailFilled,
             passwordValid: isPasswordFilled
         });
     }, [email, password, setFormValidity])
 
-   
+
 
     return (
         <div className='authorization'>
@@ -82,8 +77,8 @@ function Authorization(props) {
                     name="email"
                     placeholder="Email"
                     value={email || ''}
-                    onChange={handleChangeEmail} 
-                    onBlur={(e) => {handleInputTouch(e)}}/>
+                    onChange={handleChangeEmail}
+                    onBlur={(e) => { handleInputTouch(e) }} />
                 {(emailTouch && !emailValid) && <span className="authorization__input-error">Укажите свой email</span>}
                 <input
                     className="authorization__input"
@@ -95,7 +90,7 @@ function Authorization(props) {
                     placeholder="Пароль"
                     value={password || ''}
                     onChange={handleChangePassword}
-                    onBlur={(e) => {handleInputTouch(e)}}
+                    onBlur={(e) => { handleInputTouch(e) }}
                 />
                 {(passwordTouch && !passwordValid) && <span className="authorization__input-error">Введите пароль</span>}
                 <button disabled={isSubmitDisabled} type="submit" className={buttonDisabled}>{button}</button>

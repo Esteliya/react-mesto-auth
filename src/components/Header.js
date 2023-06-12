@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import headerLogo from '../images/logo-mesto.svg';//лого Место
 
 function Header(props) {
@@ -6,29 +7,12 @@ function Header(props) {
 
     const [headerData, setHeaderData] = React.useState({});
 
-
-/* const headerData = {
-    name: 'тест',
-    link: '/qwer',
-} */
-/*     const handleClickExit = () => {
-        console.log('ds[jlbv из профиля');
-        if (currentRoute === "/") {
-            //выходим из профиля - сверху бросаем обработчик удаления токена +
-            //onOutProfile();
-            console.log('удаляем токен из LocalStorage')
-        }
-    } */
-
     React.useEffect(() => {
-        //console.log('useEffect срабатывает');
-        //console.log(currentRoute);
-        //console.log(loggedIn);
-        //console.log(email);
+
         switch (currentRoute) {
             case "/":
                 //console.log('мы на главной странице');
-                setHeaderData ({
+                setHeaderData({
                     name: 'Выход',
                     link: '/sign-in'
                 })
@@ -36,7 +20,7 @@ function Header(props) {
                 break
             case "/sign-up":
                 //console.log('мы на странице регистрации');
-                setHeaderData ({
+                setHeaderData({
                     name: 'Вход',
                     link: '/sign-in'
                 })
@@ -44,7 +28,7 @@ function Header(props) {
                 break
             case "/sign-in":
                 //console.log('мы на странице авторизации');
-                setHeaderData ({
+                setHeaderData({
                     name: 'Регистрация',
                     link: '/sign-up'
                 })
@@ -52,7 +36,7 @@ function Header(props) {
                 break
             default:
                 //console.log('мы на странице 404');
-                setHeaderData ({
+                setHeaderData({
                     name: 'На главную',
                     link: '/'
                 })
@@ -70,11 +54,12 @@ function Header(props) {
                 className="logo" />
             <nav className='header__menu'>
                 {loggedIn ? <p className="header__email">{email}</p> : ''}
-                <a 
-                className="header__link" 
-                href={headerData.link}
-                onClick={headerData.name === "Выход" ? handleExitProfile : null}
-                >{headerData.name}</a>
+                <Link className="header__link"
+                    to={headerData.link || ''}
+                    onClick={headerData.name === "Выход" ? handleExitProfile : null}>
+                    {headerData.name}
+                </Link>
+
             </nav>
         </header>
     )

@@ -1,6 +1,5 @@
 import React from 'react';
-import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { Route, Routes, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import Main from './Main';
@@ -9,23 +8,21 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import ImagePopup from './ImagePopup';
-import CurrentUserContext from '../contexts/CurrentUserContext';
-import api from '../utils/Api';
 import Register from './Register';
 import Login from './Login';
 import NotFound from './NotFound'
 import InfoTooltip from './InfoTooltip'
 import ProtectedRoute from './ProtectedRoute';
+import CurrentUserContext from '../contexts/CurrentUserContext';
+import api from '../utils/Api';
 import * as auth from '../utils/Auth';
 
 function App() {
   const navigate = useNavigate();
-  const  location = useLocation();
+  const location = useLocation();//будем следить за роутами
+
   //контекст логина
   const [loggedIn, setLoggedIn] = React.useState(false);
-
-  //контекст данных пользователя - лишний стейт
-  //const [userInfo, setUserInfo] = React.useState({ email: '', password: '' });
 
   //контекст данных пользователя - email
   const [userEmail, setUserEmail] = React.useState('');
@@ -33,8 +30,8 @@ function App() {
   //контекст роутов сайта 
   const [currentRoute, setCurrentRoute] = React.useState('');
 
-//деструктурировали и забрали только email
-  const handleLogin = ({email}) => {
+  //деструктурировали и забрали только email
+  const handleLogin = ({ email }) => {
     setLoggedIn(true);//залогинились (правда)
     //console.log(email);
     //console.log(data.email);
@@ -43,136 +40,46 @@ function App() {
     //console.log(data.password);
     //setUserInfo({ data });
     setUserEmail(email)
-    //console.log(userEmail);
   }
   //контекст попапа оповещения хода регистрации
   const [showInfoToolTip, setShowInfoToolTip] = React.useState(false)
 
+  //контекст результата отправки запроса к api (для попапа InfoTooltip)
   const [result, setResult] = React.useState(false);
-
 
   //контекст текущего пользователя
   const [currentUser, setCurrentUser] = React.useState({});
 
 
-  
 
-    React.useEffect(() => {
-    //проверяем наличие токена
-    tockenCheck();
-    //запрашиваем данные пользователя
-    api.getUserInfo()
+  React.useEffect(() => {
+    tockenCheck();//проверяем наличие токена
+    api.getUserInfo()//запрашиваем данные пользователя
       .then((userData) => {
-        //выводим на страницу данные профиля
-        setCurrentUser(userData);
+        setCurrentUser(userData);//выводим на страницу данные профиля
         //console.log(userData);
       })
       .catch((err) => {
         console.error(`Ошибка: ${err}`);
       });
   }, []);
-  
 
+  //КАРТОЧКИ
   //контекст карточек
   const [cards, setCards] = React.useState([]);
 
   //запрашиваем данные карточек с сервера 
-function getCards () {
-  console.log('запросили данные карточек');
-  api.getArrCards()
-      .then((cardsData) => {
-        //выводим на страницу карточки
-        //console.log('запросили данные карточек');
-        setCards(cardsData);
-        console.log('обновились данные');
-        //console.log(cardsData);
-      })
-      .catch((err) => {
-        console.error(`Ошибка: ${err}`);
-      });
-}
-
-/*   React.useEffect(() => {
+  function getCards() {
+    //console.log('запросили данные карточек');
     api.getArrCards()
       .then((cardsData) => {
-        //выводим на страницу карточки
         //console.log('запросили данные карточек');
-        setCards(cardsData);
-        console.log('обновились данные');
+        setCards(cardsData);//выводим на страницу карточки
         //console.log(cardsData);
       })
       .catch((err) => {
         console.error(`Ошибка: ${err}`);
       });
-  }, []);//обновляем 1 раз */
-
-  //добавить карточку
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
-
-  function handleAddPlaceClick() {
-    setIsAddPlacePopupOpen(true);
-  };
-
-  function handleAddPlaceSubmit(place) {
-    console.log('функция работает')
-    //console.log(place);//все ок. Объект {name: '', link: ''}
-    api.postUserCard(place)
-      //изменения карточек
-      .then((newCard) => {
-        console.log(newCard);
-        setCards([newCard, ...cards])
-        closeAllPopups();
-      })
-      //если ошибка в запросе api
-      .catch((err) => {
-        console.error(`Ошибка: ${err}`);
-      });
-  }
-
-
-  //редактировать профиль
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
-
-  function handleEditProfileClick() {
-    setIsEditProfilePopupOpen(true);
-  };
-
-  function handleUpdateUser(userData) {
-    api.patchUserInfo(userData)
-      .then((userData) => {
-        setCurrentUser(userData);
-        closeAllPopups();
-      })
-      .catch((err) => {
-        console.error(`Ошибка: ${err}`);
-      });
-  }
-
-
-  //редактировать аватар профиля
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
-
-  function handleEditAvatarClick() {
-    setIsEditAvatarPopupOpen(true);
-  };
-
-  function handleUpdateAvatar(avatar) {
-    console.log(avatar);
-    api.patchAvatar(avatar)
-      .then((avatar) => {
-        setCurrentUser(avatar);
-        closeAllPopups();
-      })
-      .catch((err) => {
-        console.error(`Ошибка: ${err}`);
-      });
-  }
-
-  //открываем zoom-попап 
-  const [selectedCard, setSelectedCard] = React.useState({});
-
-  function handleCardClick(card) {
-    setSelectedCard(card);
   }
 
   //ставим лайк 
@@ -218,17 +125,86 @@ function getCards () {
     //console.log(`удалили карточку ${card._id}`);
   }
 
-  //закрываем попапы по крестику
+  //ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ
+  //редактировать профиль
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
+
+  function handleEditProfileClick() {
+    setIsEditProfilePopupOpen(true);
+  };
+
+  function handleUpdateUser(userData) {
+    api.patchUserInfo(userData)
+      .then((userData) => {
+        setCurrentUser(userData);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.error(`Ошибка: ${err}`);
+      });
+  }
+
+
+  //редактировать аватар профиля
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
+
+  function handleEditAvatarClick() {
+    setIsEditAvatarPopupOpen(true);
+  };
+
+  function handleUpdateAvatar(avatar) {
+    console.log(avatar);
+    api.patchAvatar(avatar)
+      .then((avatar) => {
+        setCurrentUser(avatar);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.error(`Ошибка: ${err}`);
+      });
+  }
+
+  //ПОПАПЫ
+  //добавить карточку
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+
+  function handleAddPlaceClick() {
+    setIsAddPlacePopupOpen(true);
+  };
+
+  function handleAddPlaceSubmit(place) {
+    //console.log(place);//все ок. Объект {name: '', link: ''}
+    api.postUserCard(place)
+      //изменения карточек
+      .then((newCard) => {
+        //console.log(newCard);
+        setCards([newCard, ...cards])
+        closeAllPopups();
+      })
+      //если ошибка в запросе api
+      .catch((err) => {
+        console.error(`Ошибка: ${err}`);
+      });
+  }
+
+  //открываем zoom-попап 
+  const [selectedCard, setSelectedCard] = React.useState({});
+
+  function handleCardClick(card) {
+    setSelectedCard(card);
+  }
+
+  //закрываем все попапы по крестику
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
-    //setIscheckRegister(false);
     setSelectedCard({});
     setShowInfoToolTip(false)
   }
 
-  //регистрируем пользователя +
+  //ФУНКИОНАЛ СТРАНИЦ НЕАВТОРИЗИРОВАННОГО ПОЛЬЗОВАТЕЛЯ
+  //регистрируем пользователя
   function handleRegister(data) {
     const { email, password } = data;
     auth.register(email, password)
@@ -253,12 +229,7 @@ function getCards () {
   //авторизируем пользователя 
   function handleAutorization(data) {
     const { email, password } = data;
-    //setUserInfo(data);
-    //console.log(data);
-    //console.log(data.email);
-    //console.log(data.password);
-    //сохранили в объект данные из полей при авторизации —> используем после успешной авторизации
-    const dataAuthUser = {
+    const dataAuthUser = {//сохранили в объект данные из полей при авторизации —> используем после успешной авторизации
       email: email,
       password: password
     };
@@ -269,18 +240,11 @@ function getCards () {
         //alert('Авторизация прошла успешно')
         if (data.token) {
           //console.log('получаем токен');
-          //console.log(data.token);
           localStorage.setItem('jwt', data.token);
-          console.log('записали данные токена в localStorage');
-          //после успешной авторизации передаем данные авторизировавшегося пользователя дальше
-          //console.log('1');
-          //console.log(dataAuthUser);
+          //console.log('записали данные токена в localStorage');
           getCards();
-          handleLogin(dataAuthUser);
-          //console.log('2');
-          console.log(dataAuthUser);
-          //console.log('3');
-          //navigate('/');
+          handleLogin(dataAuthUser);//после успешной авторизации передаем данные авторизировавшегося пользователя дальше
+          //console.log(dataAuthUser);
           tockenCheck();
         }
       })
@@ -290,61 +254,42 @@ function getCards () {
   }
 
   //проверяем наличие токена в localStorage
-  function tockenCheck () {    
+  function tockenCheck() {
     const jwt = localStorage.getItem('jwt');
-    //console.log(currentRoute);
-    //let route = currentRoute;
 
     if (jwt) {
       auth.checkToken(jwt)
         .then(user => {
-          console.log('сравнили токен - есть');
-          //setLoggedIn(false);
-          setLoggedIn(true);//уже есть в handleLogin
-          //console.log(user);
-          getCards();
+          //console.log('сравнили токен - есть');
+          setLoggedIn(true);
+          getCards();//запросили данные карточек с сервера
           handleLogin(user.data);
-          console.log(location);
+          //console.log(location);
           const path = location.pathname;
-          console.log(path);
-           switch (path) {
+          //console.log(path);
+          switch (path) {//навигируем существующие роуты на карточки при авторизации, иначе 404 страница
             case "/":
               navigate('/');
               break
-              case "/sign-in":
+            case "/sign-in":
               navigate('/');
               break
-              case "/sign-up":
+            case "/sign-up":
               navigate('/');
               break
-          } 
-          
-         /*  if (path === '/') {
-            navigate('/');
-          } else {
-            navigate(path);
-          } */
-          //console.log(user.data.email);
-          //setUserEmail(user.data.emai);
-          //console.log(userEmail);
-          //navigate('/'); //переходим к карточкам
-          
+          }
+
         })
         .catch((err) => {
           console.error(`Ошибка: ${err}`);
         });
     } else {
-      //setLoggedIn(true);
       setLoggedIn(false);
     }
 
   }
-//при загрузке страницы проверяем токен 
-/*   React.useEffect(() => {
-    tockenCheck();
-  }, []) */
 
-  //удаляем токен - для кнопки ВЫХОД - работает - пробросить в Header!!! 
+  //удаляем токен - для кнопки ВЫХОД
   function handleExitProfile() {
     if (localStorage.getItem('jwt')) {
       localStorage.removeItem("jwt");
@@ -363,22 +308,22 @@ function getCards () {
           handleExitProfile={handleExitProfile}
         />
         <Routes>
-          
-        <Route exact path='/' element={!loggedIn ? <Navigate to='/sign-up' /> :  <ProtectedRoute
-              onEditProfile={handleEditProfileClick}
-              onAddPlace={handleAddPlaceClick}
-              onEditAvatar={handleEditAvatarClick}
-              onCardClick={handleCardClick}
-              cards={cards}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
-              loggedIn={loggedIn}
-              setCurrentRoute={setCurrentRoute}
-              element={Main} />} replace />
-         
-          <Route exact path='/sign-up' element={<Register handleDataForm={handleRegister} setCurrentRoute={setCurrentRoute}/>} />
-          <Route exact path='/sign-in' element={<Login handleDataForm={handleAutorization} setCurrentRoute={setCurrentRoute}/>} />
-          <Route path='*' element={<NotFound />} replace/> 
+
+          <Route exact path='/' element={!loggedIn ? <Navigate to='/sign-up' /> : <ProtectedRoute
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onEditAvatar={handleEditAvatarClick}
+            onCardClick={handleCardClick}
+            cards={cards}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
+            loggedIn={loggedIn}
+            setCurrentRoute={setCurrentRoute}
+            element={Main} />} replace />
+
+          <Route exact path='/sign-up' element={<Register handleDataForm={handleRegister} setCurrentRoute={setCurrentRoute} />} />
+          <Route exact path='/sign-in' element={<Login handleDataForm={handleAutorization} setCurrentRoute={setCurrentRoute} />} />
+          <Route path='*' element={<NotFound />} replace />
 
         </Routes>
 

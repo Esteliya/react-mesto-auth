@@ -4,13 +4,13 @@ import { useContext } from "react";
 import CurrentUserContext from '../contexts/CurrentUserContext.js'
 
 function Main(props) {
-    const { onEditProfile, onAddPlace, onEditAvatar, onCardClick, cards, onCardLike, onCardDelete, setCurrentRoute} = props;
+    const { onEditProfile, onAddPlace, onEditAvatar, onCardClick, cards, onCardLike, onCardDelete, setCurrentRoute } = props;
 
     const currentUser = useContext(CurrentUserContext);
 
     React.useEffect(() => {
         setCurrentRoute("/");
-      }, []);
+    }, []);
 
     return (
         <main>
@@ -49,14 +49,14 @@ function Main(props) {
                 className="cards">
                 {cards.map((card) => {
                     return (
-                    <Card 
-                    card={card} 
-                    key={card._id} 
-                    onCardClick={onCardClick} 
-                    currentUser = {currentUser} 
-                    onCardLike={onCardLike} 
-                    onCardDelete={onCardDelete}/>
-                    //console.log(card)
+                        <Card
+                            card={card}
+                            key={card._id}
+                            onCardClick={onCardClick}
+                            currentUser={currentUser}
+                            onCardLike={onCardLike}
+                            onCardDelete={onCardDelete} />
+                        //console.log(card)
                     )
                 })}
             </section>

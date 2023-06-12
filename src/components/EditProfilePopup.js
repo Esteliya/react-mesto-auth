@@ -12,11 +12,11 @@ function EditProfilePopup(props) {
     const [name, setName] = React.useState(currentUser.name);
     const [description, setDescription] = React.useState(currentUser.about);
 
-        //используем данные, полученные из api выше
+    //используем данные, полученные из api выше
     React.useEffect(() => {
         setName(currentUser.name);
         setDescription(currentUser.about);
-    }, [currentUser, isOpen ]);
+    }, [currentUser, isOpen]);
 
 
     //обработчик поля имени
@@ -38,12 +38,6 @@ function EditProfilePopup(props) {
         });
     }
 
-/*     React.useEffect (() => {
-            console.log('123');
-        
-
-    }, [name, description]) */
-
 
     return (
         <PopupWithForm
@@ -62,7 +56,7 @@ function EditProfilePopup(props) {
                 className="edit-form__personalia"
                 value={(name !== null && name !== undefined) ? name : ''}
                 onChange={handleNameChange} />
-            <span className="firstname-error edit-form__personalia-error"></span> 
+            <span className="firstname-error edit-form__personalia-error"></span>
             <input
                 type="text"
                 required

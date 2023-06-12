@@ -1,15 +1,8 @@
 import React from 'react';
-import notFound from '../images/404-error.png'
 import { Link } from "react-router-dom";
-
-//import { useNavigate } from "react-router-dom";
+import notFound from '../images/404-error.png'
 
 function NotFound() {
-
-    //const navigate = useNavigate();
-/*     function goBack () {
-        navigate("/");
-    } */
 
     return (
         <div className='not-found'>
